@@ -34,6 +34,7 @@ async function run() {
     app.get("/products", async (req, res) => {
       const brand = req.query.brand; 
       const category = req.query.category;
+      const priceRange = req.query.price;
       let query = {};
     
       if (brand) {
@@ -46,6 +47,16 @@ async function run() {
           query.categoryName = category; 
         
       }
+      if (priceRange && priceRange !== 'price') {
+        const [minPrice, maxPrice] = priceRange.split('-').map(Number);
+        
+        if (maxPrice === 'infinity') {
+          query.price = { $gte: minPrice };  
+        } else {
+          query.price = { $gte: minPrice, $lte: maxPrice };  
+        }
+      }
+
     
       const cursor = productCollection.find(query); 
       const result = await cursor.toArray();
