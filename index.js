@@ -5,16 +5,8 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(
-    cors({
-      origin: [
-        "http://localhost:5173",
-      ],
-    })
-);
+app.use(cors());
 app.use(express.json());
-
-
 
 
 
@@ -40,7 +32,14 @@ async function run() {
 
 
     app.get("/products", async (req, res) => {
-      const cursor = productCollection.find();
+      const brand = req.query.brand; 
+      let query = {};
+    
+      if (brand) {
+        query = { brandName: brand }; 
+      }
+    
+      const cursor = productCollection.find(query); 
       const result = await cursor.toArray();
       res.send(result);
     });
