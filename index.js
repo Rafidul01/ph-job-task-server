@@ -33,10 +33,18 @@ async function run() {
 
     app.get("/products", async (req, res) => {
       const brand = req.query.brand; 
+      const category = req.query.category;
       let query = {};
     
       if (brand) {
+        
         query = { brandName: brand }; 
+        
+      }
+      if (category) {
+        
+          query.categoryName = category; 
+        
       }
     
       const cursor = productCollection.find(query); 
