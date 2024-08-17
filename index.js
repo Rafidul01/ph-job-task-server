@@ -32,6 +32,7 @@ async function run() {
       const category = req.query.category;
       const priceRange = req.query.price;
       const sortOption = req.query.sort;
+      const search = req.query.search;
       let query = {};
 
       if (brand) {
@@ -61,9 +62,15 @@ async function run() {
           sortQuery.creationDate = -1; // Newest first
         }
       }
+      if (search) {
+        query.productName = {
+          $regex: search,
+          $options: "i",
+        };
+      }
 
       const cursor = productCollection.find(query).sort(sortQuery);
-  const result = await cursor.toArray();
+      const result = await cursor.toArray();
       res.send(result);
     });
     console.log(
