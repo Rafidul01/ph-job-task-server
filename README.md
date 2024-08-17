@@ -13,18 +13,21 @@ This repository contains the backend code for the project. It is built using Nod
 
 1. **Create a new directory and navigate into it:**
    ```bash
- - mkdir myapp
- - cd myapp
+   mkdir myapp
+   cd myapp
 
 2. **Initialize a new Node.js project:**
- - npm init -y
+    ```bash
+    npm init -y
 3. **Install necessary dependencies:**
- - npm install express cors mongodb dotenv
+    ```bash
+    npm install express cors mongodb dotenv
 4. **Create a .env file in the root directory to manage environment variables:**
- - DB_USER= Your Database User Id
- - DB_PASS= Your Database Password
+    DB_USER= Your Database User Id
+    DB_PASS= Your Database Password
 5. **Run the backend server with nodemon:**
- - nodemon index.js
+    ```bash
+    nodemon index.js
 
 ### Project Structure
 - index.js: Entry point of the application.
