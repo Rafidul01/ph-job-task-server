@@ -33,6 +33,8 @@ async function run() {
       const priceRange = req.query.price;
       const sortOption = req.query.sort;
       const search = req.query.search;
+      const page = parseInt(req.query.page) || 1; 
+      const limit = parseInt(req.query.limit) || 5; 
       let query = {};
 
       if (brand) {
@@ -55,11 +57,11 @@ async function run() {
 
       if (sortOption) {
         if (sortOption === "Low to High") {
-          sortQuery.price = 1; // Ascending order
+          sortQuery.price = 1; 
         } else if (sortOption === "High to Low") {
-          sortQuery.price = -1; // Descending order
+          sortQuery.price = -1; 
         } else if (sortOption === "Newest first") {
-          sortQuery.creationDate = -1; // Newest first
+          sortQuery.creationDate = -1; 
         }
       }
       if (search) {
@@ -69,9 +71,26 @@ async function run() {
         };
       }
 
-      const cursor = productCollection.find(query).sort(sortQuery);
+      
+      const skip = (page - 1) * limit;
+
+      
+      const cursor = productCollection
+        .find(query)
+        .sort(sortQuery)
+        .skip(skip)
+        .limit(limit);
+
       const result = await cursor.toArray();
-      res.send(result);
+      const totalItems = await productCollection.countDocuments(query); 
+      const totalPages = Math.ceil(totalItems / limit); 
+
+      res.send({
+        products: result,
+        totalItems,
+        totalPages,
+        currentPage: page,
+      });
     });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
